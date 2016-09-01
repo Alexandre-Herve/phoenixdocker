@@ -2,6 +2,10 @@ machine:
   services:
     - docker
 
+dependencies:
+  pre:
+    - mix deps.get
+
 deployment:
   elasticbeanstalk:
     branch: master
