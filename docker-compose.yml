@@ -1,14 +1,17 @@
-web:
-  build: .
-  environment:
-    DATABASE_URL: ecto://phoenixdocker:phoenixdocker@db/phoenixdocker_prod
-    PORT: 4001
-  links:
-    - db
-  ports:
-    - 4001:4001
-db:
-  image: postgres:9.4
-  environment:
-    POSTGRES_USER: phoenixdocker
-    POSTGRES_PASSWORD: phoenixdocker
+version: '2'
+services:
+  web:
+    build: .
+    environment:
+      DATABASE_URL: ecto://phoenixdocker:phoenixdocker@db/phoenixdocker_prod
+      PORT: 4001
+    ports:
+      - 4001:4001
+    links:
+      - db
+    command: dockerize -wait tcp://db:5432 sh -c "mix ecto.create && mix ecto.migrate && mix phoenix.server"
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_USER: phoenixdocker
+      POSTGRES_PASSWORD: phoenixdocker
